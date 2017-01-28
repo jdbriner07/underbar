@@ -345,10 +345,11 @@
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
     var input = arguments;
-    //var timeInMs = Date.now();  ------Infinite loop not sure how to do this   
-    // while (timeInMs + wait > Date.now()){
-    // }
-    return func(input[2], input[3]);
+    var time = 0;
+    var time_elapsed = function (){time++;}; 
+    var watch = function (){return time;};
+    setInterval(time_elapsed, wait);
+    return func(input[2], input[3]); 
   };
 
 
