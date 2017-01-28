@@ -322,18 +322,22 @@
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
-  var acc = {};
+  
   _.memoize = function(func) {
-    console.log(acc);
-    var result;
+    var acc = {};
+    var slice = Array.prototype.slice;
     return function(){
-      if (_.contains(acc, JSON.stringify(func))){
-        return acc[JSON.stringify(func)];
+      var args = slice.call(arguments)
+      console.log(args);
+      if (!(arguments[0] in acc)){
+        return (acc[args] = func.apply(this, args)); 
       }
-      result = func.apply(this, arguments)
-      acc[JSON.stringify(func)] = result;
-      console.log(acc);
-      return result;
+      else if (args in acc){
+        return acc[args];
+      }
+      else {
+        return (acc[args] = func.apply(this, args));
+      }
     }
   };
 
@@ -343,12 +347,26 @@
   // The arguments for the original function are passed after the wait
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
+  var makeStopwatch = function() {
+      var elapsed = 0;
+      var stopwatch = function () {return elapsed;};
+      var increase = function() {elapsed++;};
+      setInterval(increase, 1);
+      return stopwatch;
+  }
+
   _.delay = function(func, wait) {
-    var input = arguments;
-    var time = 0;
-    var time_elapsed = function (){time++;}; 
-    var watch = function (){return time;};
-    setInterval(time_elapsed, wait);
+    // var input = arguments;
+    // var time = 0;
+    // var stopwatch1 = makeStopwatch();
+    // while(stopwatch1() < wait) {
+    //   console.log("tick");
+    // } 
+    // var time_tick = function (){time++;}; 
+    // while (time < wait){
+    //   setTimeout(time_tick, 1);
+    //   console.log(time);
+    // }
     return func(input[2], input[3]); 
   };
 
