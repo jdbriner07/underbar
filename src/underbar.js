@@ -164,7 +164,13 @@
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
     var acc = accumulator;
-    var newCollection = collection.slice();
+    var newCollection;
+    if (Array.isArray(collection)){
+      newCollection = collection.slice();
+    }
+    else {
+      newCollection = collection;
+    }
     if (acc === undefined){
       acc = collection[0];
       newCollection.shift();
@@ -191,12 +197,46 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    if (arguments[1] === undefined) {
+      return _.reduce(collection, function(wasFalse, element){
+        if (wasFalse && element) {
+          return true;
+        }
+        else {
+          return false;
+        }
+      }, true);
+    }
+    return _.reduce(collection, function(wasFalse, element){
+      if (wasFalse && iterator(element)) {
+        return true;
+      }
+      return false;
+    }, true)
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    if (arguments[1] === undefined) {
+      return _.reduce(collection, function(found, element){
+        if (found) {
+          return true;
+        }
+        else {
+          return element;
+        }
+      }, false);
+    }
+    return _.reduce(collection, function(found, element){
+      if (found || iterator(element)){
+        return true;
+      }
+      else {
+        return false;
+      } 
+    }, false)
   };
 
 
@@ -219,11 +259,27 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    var acc = obj;
+    for (var i = 0; i < arguments.length; i++) {
+      _.each(arguments[i], function(value, key) {
+        acc[key] = value;
+      })
+    }
+    return acc;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    var acc = obj;
+    for (var i = 0; i < arguments.length; i++) {
+      _.each(arguments[i], function(value, key) {
+        if (acc[key] === undefined) {
+          acc[key] = value;
+        }
+      })
+    }
+    return acc;
   };
 
 
@@ -266,7 +322,19 @@
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
+  var acc = {};
   _.memoize = function(func) {
+    console.log(acc);
+    var result;
+    return function(){
+      if (_.contains(acc, JSON.stringify(func))){
+        return acc[JSON.stringify(func)];
+      }
+      result = func.apply(this, arguments)
+      acc[JSON.stringify(func)] = result;
+      console.log(acc);
+      return result;
+    }
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -276,6 +344,11 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var input = arguments;
+    //var timeInMs = Date.now();  ------Infinite loop not sure how to do this   
+    // while (timeInMs + wait > Date.now()){
+    // }
+    return func(input[2], input[3]);
   };
 
 
@@ -290,6 +363,15 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var copyArray = array.slice();
+    var acc = [];
+    var rand = Math.floor(Math.random()*copyArray.length);
+    for (var i = 0; i < array.length; i++) {
+      acc.push(copyArray[rand]);
+      copyArray.splice(rand,1);
+      rand = Math.floor(Math.random()*copyArray.length);
+    }
+    return acc;
   };
 
 
