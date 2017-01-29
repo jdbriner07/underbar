@@ -328,7 +328,6 @@
     var slice = Array.prototype.slice;
     return function(){
       var args = slice.call(arguments)
-      console.log(args);
       if (!(arguments[0] in acc)){
         return (acc[args] = func.apply(this, args)); 
       }
@@ -347,29 +346,19 @@
   // The arguments for the original function are passed after the wait
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
-  var makeStopwatch = function() {
-      var elapsed = 0;
-      var stopwatch = function () {return elapsed;};
-      var increase = function() {elapsed++;};
-      setInterval(increase, 1);
-      return stopwatch;
-  }
+  
 
+  //I don't know why I am so stumped on this one. Have tried using setTimeout, setTimeinterval, set up a helper sleep function, not sure how to approach this one.
   _.delay = function(func, wait) {
-    // var input = arguments;
-    // var time = 0;
-    // var stopwatch1 = makeStopwatch();
-    // while(stopwatch1() < wait) {
-    //   console.log("tick");
-    // } 
-    // var time_tick = function (){time++;}; 
-    // while (time < wait){
-    //   setTimeout(time_tick, 1);
-    //   console.log(time);
-    // }
-    return func(input[2], input[3]); 
+    var input = arguments;
+    clock.tick(wait);
+    return func(input[2], input[3]);
   };
 
+
+// setTimeout(function(){
+//   return "hello";
+// }, 10000);
 
   /**
    * ADVANCED COLLECTION OPERATIONS
