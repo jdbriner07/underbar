@@ -349,10 +349,43 @@
   
 
   //I don't know why I am so stumped on this one. Have tried using setTimeout, setTimeinterval, set up a helper sleep function, not sure how to approach this one.
+  var makeStopwatch = function() {
+    var elasped = 0;
+    var stopwatch = function() {return elasped;};
+    var increase = function() {elasped++};
+    setInterval(increase, 1);
+    return stopwatch;
+  } 
+  // var stopwatch1 = makeStopwatch();
+  // var time = stopwatch1();
+  // console.log(time);
+  // console.log(stopwatch1());
+
   _.delay = function(func, wait) {
     var input = arguments;
-    clock.tick(wait);
-    return func(input[2], input[3]);
+    // var fun = {execute: func}
+    // console.log(fun.execute())
+    // var watch = makeStopwatch();
+    // var time = watch();
+    // while (time < wait){
+    //   console.log(time);
+    //   time = watch()
+    // }
+    // watch = null;
+    var time = 0;
+    var waiting = function() {
+      if (time < wait ){
+        time ++;
+        console.log(time);
+      }
+      else {
+        clearInterval(waiting);
+        return func(input[1], input[2]);
+      }
+    }
+    setInterval(waiting, 1)
+    //setTimeout(fun.execute.call(input[2], input[3]), wait);
+    //return func(input[2], input[3]);
   };
 
 
