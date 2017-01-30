@@ -372,20 +372,38 @@
     //   time = watch()
     // }
     // watch = null;
-    var time = 0;
-    var waiting = function() {
-      if (time < wait ){
-        time ++;
-        console.log(time);
-      }
-      else {
-        clearInterval(waiting);
-        return func(input[1], input[2]);
-      }
-    }
-    setInterval(waiting, 1)
+    //========================
+    // var time = 0;
+    // var waiting = function() {
+    //   if (time < wait ){
+    //     time ++;
+    //     console.log(time);
+    //   }
+    //   else {
+    //     clearInterval(waiting);
+    //     return func(input[1], input[2]);
+    //   }
+    // }
+    // setInterval(waiting, 1)
+    //======================================
     //setTimeout(fun.execute.call(input[2], input[3]), wait);
     //return func(input[2], input[3]);
+    //================================
+    var currentDate = Date.now();
+    var time = Date.now();
+    setTimeout(function(){return func(input[2], input[3])}, wait);
+    time = Date.now();
+    //func(input[2], input[3])
+    // var currentTime = currentDate.getSeconds();
+    // console.log(currentTime);
+    // while (time-currentDate <= wait){
+    //   setTimeout(function(){console.log('running')}, 1);
+    //   time = Date.now();
+    //   console.log(time);
+    //   if (time-currentDate === 100){
+    //     return func(input[2], input[3]);
+    //   }
+    // }
   };
 
 
